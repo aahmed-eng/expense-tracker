@@ -63,9 +63,10 @@ def main():
             res = database.get_transactions(month)
             if isinstance(res, tuple):
                 rows, headers, title_msg = res
+                rows = [(rowid, date, category, f"£{amount:.2f}") for rowid, date, category, amount in rows]
                 rows.insert(-1, SEPARATING_LINE)
                 print(f"\n{title_msg}")
-                print(tabulate(rows, headers=headers, tablefmt="fancy_grid", colalign=('left', 'right')))
+                print(tabulate(rows, headers=headers, tablefmt="fancy_grid", colalign=('left', 'center', 'center', 'right')))
             else:
                 print(res)
 
@@ -74,9 +75,10 @@ def main():
             res = database.get_transactions_by_category(category)
             if isinstance(res, tuple):
                 rows, headers = res
+                rows = [(rowid, date, category, f"£{amount:.2f}") for rowid, date, category, amount in rows]
                 rows.insert(-1, SEPARATING_LINE)
                 print(f"\n{category.title()} Transactions:")
-                print(tabulate(rows, headers=headers, tablefmt="fancy_grid", colalign=('left', 'right')))
+                print(tabulate(rows, headers=headers, tablefmt="fancy_grid", colalign=('left', 'center', 'center', 'right')))
             else:
                 print(res)
 
@@ -100,6 +102,7 @@ def main():
             res = database.summary(month)
             if isinstance(res, tuple):
                 rows, headers, title_msg = res
+                rows = [(category, f"£{amount:.2f}") for category, amount in rows]
                 rows.insert(-1, SEPARATING_LINE)
                 print(f"\n{title_msg}")
                 print(tabulate(rows, headers=headers, tablefmt="fancy_grid", colalign=('left', 'right')))
@@ -112,6 +115,7 @@ def main():
             print("No budgets have been set.")
         elif isinstance(res, tuple):
             rows, headers = res
+            rows = [(category, f"£{amount:.2f}") for category, amount in rows]
             rows.insert(-1, SEPARATING_LINE)
             print("\nBudgets:")
             print(tabulate(rows, headers=headers, tablefmt="fancy_grid", colalign=('left', 'right')))

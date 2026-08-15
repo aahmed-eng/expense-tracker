@@ -30,7 +30,7 @@ def init_db(db_path=DB_PATH):
         (category TEXT PRIMARY KEY, amount REAL)""")
 
 # Parses a month into a (year, month) tuple
-def parse_month(month):
+def parse_month(month: str) -> tuple[int, int]:
     today = date.today()
     if month is None:
         return today.year, today.month
@@ -97,8 +97,7 @@ def get_transactions(month, db_path=DB_PATH):
     if rows:
         title_msg = f"{calendar.month_name[month_num]} {year} Transactions:" if month is not None else "All Transactions:"
         total = sum(amount for _, _, _, amount in rows)
-        rows = [(rowid, date, category, f"£{amount:.2f}") for rowid, date, category, amount in rows]
-        rows.append(("Total", "", "", f"£{total:.2f}"))
+        rows.append(("Total", "", "", total))
 
         return rows, headers, title_msg
     return "No transactions found for the specified month." if month is not None else "No transactions found in the database."
@@ -112,8 +111,7 @@ def get_transactions_by_category(category, db_path=DB_PATH):
 
     if rows:
         total = sum(amount for _, _, _, amount in rows)
-        rows = [(rowid, date, category, f"£{amount:.2f}") for rowid, date, category, amount in rows]
-        rows.append(("Total", "", "", f"£{total:.2f}"))
+        rows.append(("Total", "", "", total))
 
         return rows, headers
     return f"No transactions found under category '{category}'."
@@ -136,8 +134,7 @@ def summary(month, db_path=DB_PATH):
     if rows:
         headers = ["Category", "Amount"]
         total = sum(amount for _, amount in rows)
-        rows = [(category, f"£{amount:.2f}") for category, amount in rows]
-        rows.append(("Total", f"£{total:.2f}"))
+        rows.append(("Total", total))
         
 
         title_msg = f"{calendar.month_name[month_num]} {year} Summary:"
@@ -155,8 +152,7 @@ def budgets(category, amount, db_path=DB_PATH):
             if rows:
                 headers = ["Category", "Amount"]
                 total = sum(amount for _, amount in rows)
-                rows = [(category, f"£{amount:.2f}") for category, amount in rows]
-                rows.append(("Total", f"£{total:.2f}"))
+                rows.append(("Total", total))
 
                 return rows, headers
             return None
