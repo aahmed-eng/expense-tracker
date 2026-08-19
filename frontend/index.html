@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense Tracker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container">
+    <h1>Expense Tracker</h1>
+
+    <!-- ADD TRANSACTION -->
+    <section>
+      <h2>Add a transaction</h2>
+      <form id="add-transaction-form">
+        <input type="text" id="tx-category" placeholder="Category" required>
+        <input type="number" id="tx-amount" placeholder="Amount" step="0.01" min="0.01" required>
+        <input type="date" id="tx-date">
+        <button type="submit">Add</button>
+      </form>
+      <p id="add-status" class="status"></p>
+    </section>
+
+    <!-- TRANSACTIONS -->
+    <section>
+      <h2>Transactions</h2>
+      <div class="toolbar">
+        <input type="month" id="filter-month">
+        <button id="clear-filter-btn" type="button">Show all</button>
+        <button id="delete-all-btn" type="button" class="danger">Delete all</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Category</th>
+            <th>Amount</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="transactions-body"></tbody>
+      </table>
+    </section>
+
+    <!-- BUDGETS -->
+    <section>
+      <h2>Budgets</h2>
+      <form id="budget-form">
+        <input type="text" id="budget-category" placeholder="Category" required>
+        <input type="number" id="budget-amount" placeholder="Monthly limit" step="0.01" min="0.01" required>
+        <button type="submit">Set budget</button>
+      </form>
+      <div id="budgets-list"></div>
+    </section>
+
+    <!-- EXPORT / IMPORT -->
+    <section>
+      <h2>Export &amp; import</h2>
+      <div class="toolbar">
+        <button id="export-btn" type="button">Export CSVs</button>
+        <span id="export-links"></span>
+      </div>
+      <form id="import-form">
+        <select id="import-table">
+          <option value="transactions">transactions</option>
+          <option value="budgets">budgets</option>
+        </select>
+        <input type="file" id="import-file" accept=".csv" required>
+        <button type="submit">Import CSV</button>
+      </form>
+      <p id="import-status" class="status"></p>
+    </section>
+
+    <!-- RESET -->
+    <section>
+      <h2>Reset</h2>
+      <button id="reset-btn" type="button" class="danger">Delete everything</button>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -58,10 +58,10 @@ def main():
     args = parser.parse_args()
 
     if args.action == "display":
-        if not args.month: args.month = [None]
+        if not args.month: args.month = [None] # if a specific month isn't given
         for month in args.month:
             res = database.get_transactions(month)
-            if isinstance(res, tuple):
+            if isinstance(res, tuple): # if transactions were found, they'll be returned as a tuple, otherwise a string
                 rows, headers, title_msg = res
                 rows = [(rowid, date, category, f"£{amount:.2f}") for rowid, date, category, amount in rows]
                 rows.insert(-1, SEPARATING_LINE)
@@ -73,7 +73,7 @@ def main():
     elif args.action == "category_display":
         for category in args.category:
             res = database.get_transactions_by_category(category)
-            if isinstance(res, tuple):
+            if isinstance(res, tuple): # if transactions were found, they'll be returned as a tuple, otherwise a string
                 rows, headers = res
                 rows = [(rowid, date, category, f"£{amount:.2f}") for rowid, date, category, amount in rows]
                 rows.insert(-1, SEPARATING_LINE)
@@ -83,7 +83,7 @@ def main():
                 print(res)
 
     elif args.action == "add":
-        if not args.category.strip():
+        if not args.category.strip(): # category input validation - can't be an empty string
             raise ValueError("Please enter a valid category.")
         for amount in args.amount:
             try:
@@ -92,15 +92,15 @@ def main():
                 print(f"Could not add transaction: {error}")
 
     elif args.action == "delete":
-        if not args.id: args.id = [None]
+        if not args.id: args.id = [None] # if a specific id isn't given
         for id in args.id:
             print(database.delete_transaction(id))
 
     elif args.action == "summary":
-        if not args.month: args.month = [None]
+        if not args.month: args.month = [None] # if a specific month isn't given
         for month in args.month:
             res = database.summary(month)
-            if isinstance(res, tuple):
+            if isinstance(res, tuple): # if transactions were found, the summary be returned as a tuple, otherwise a string
                 rows, headers, title_msg = res
                 rows = [(category, f"£{amount:.2f}") for category, amount in rows]
                 rows.insert(-1, SEPARATING_LINE)
@@ -123,13 +123,15 @@ def main():
             print(res)
 
     elif args.action == "remove_budget":
-        if not args.category: args.category = [None]
+        if not args.category: args.category = [None] # if a specific category isn't given, all budgets are deleted
         for category in args.category:
             print(database.remove_budget(category))
 
     elif args.action == "reset":
+        # ask for confirmation before resetting
         check = input("Are you sure you want to reset the database? This will delete all transactions and budgets. (y/n): ") \
             .lower().strip()
+        
         if check == "y":
             database.delete_transaction(None)
             database.remove_budget(None)
@@ -140,11 +142,13 @@ def main():
             print("Invalid input. Database reset cancelled.")
 
     elif args.action == "export":
+        # creates csv files in a folder called 'exports'
         print(database.export_csv())
 
     elif args.action == "import":
         res = database.import_csv(args.table, args.path, args.date, args.category, args.amount)
-        print(f"Imported: {res['imported']}\nFailed: {res['failed']}")
+        print(f"Imported: {res['imported']}\nFailed: {res['failed']}") # summary of the importing process
+        # display errors
         if res['errors']:
             print("\nErrors:")
             for error in res['errors']:

@@ -74,12 +74,12 @@ def test_get_transactions(db_path):
     assert title_msg == "January 2024 Transactions:"
     assert headers == ["rowid", "date", "category", "amount"]
     assert len(rows) == 3, "2 transactions plus the total row"
-    assert rows[-1] == ("Total", "", "", "£62.50"), "the total should only include January's transactions"
+    assert rows[-1] == ("Total", "", "", 62.50), "the total should only include January's transactions"
 
     rows, headers, title_msg = database.get_transactions(None, db_path)
     assert title_msg == "All Transactions:"
     assert len(rows) == 4, "all 3 transactions plus the total row"
-    assert rows[-1] == ("Total", "", "", "£70.50")
+    assert rows[-1] == ("Total", "", "", 70.50)
 
 def test_get_transactions_month_boundaries(db_path):
     database.add_transaction("travel", 10, "2024-01-01", db_path)  # first day
@@ -89,7 +89,7 @@ def test_get_transactions_month_boundaries(db_path):
 
     rows, headers, title_msg = database.get_transactions("2024-01", db_path)
     assert len(rows) == 3, "only the 2 January transactions plus the total should be included"
-    assert rows[-1] == ("Total", "", "", "£30.00")
+    assert rows[-1] == ("Total", "", "", 30.00)
 
 def test_get_transactions_leap_year(db_path):
     database.add_transaction("travel", 15, "2024-02-29", db_path)  # 2024 is a leap year
@@ -109,7 +109,7 @@ def test_get_transactions_by_category(db_path):
     rows, headers = database.get_transactions_by_category("travel", db_path)
     assert headers == ["rowid", "date", "category", "amount"]
     assert len(rows) == 3, "2 travel transactions plus the total row"
-    assert rows[-1] == ("Total", "", "", "£75.00")
+    assert rows[-1] == ("Total", "", "", 75.00)
     assert all(row[2] == "travel" for row in rows[:-1]), "only travel transactions should be returned, food should be excluded"
 
 
@@ -130,15 +130,15 @@ def test_summary_groups_by_category(db_path):
     assert headers == ["Category", "Amount"]
     assert len(rows) == 3, "2 categories plus the total row"
     row_dict = dict(rows[:-1])
-    assert row_dict["travel"] == "£75.00"
-    assert row_dict["food"] == "£12.00"
-    assert rows[-1] == ("Total", "£87.00")
+    assert row_dict["travel"] == 75.00
+    assert row_dict["food"] == 12.00
+    assert rows[-1] == ("Total", 87.00)
 
 def test_summary_defaults_to_current_month(db_path):
     database.add_transaction("travel", 30, today.isoformat(), db_path)
     rows, _, title_msg = database.summary(None, db_path)
     assert title_msg == f"{calendar.month_name[today.month]} {today.year} Summary:"
-    assert rows[-1] == ("Total", "£30.00")
+    assert rows[-1] == ("Total", 30.00)
 
 def test_summary_future_month_raises(db_path):
     with pytest.raises(ValueError, match="month cannot be in the future"):
@@ -162,7 +162,7 @@ def test_budgets(db_path):
     assert isinstance(result, tuple)
     assert isinstance(result[0], list)
     assert len(result[0]) == 3, "2 budgets have been saved, and the 3rd is the total"
-    assert result[0][2][1] == "£700.33", "checks that the total is correct"
+    assert result[0][2][1] == 700.33, "checks that the total is correct"
     assert len(result[1]) == 2, "there are 2 headers"
     database.budgets("travel", 300, db_path)
     with database.get_connection(db_path) as conn:

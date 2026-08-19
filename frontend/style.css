@@ -1,0 +1,166 @@
+/* Basic page setup */
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
+  color: #222;
+  margin: 0;
+  padding: 40px 20px;
+}
+
+.container {
+  max-width: 700px;
+  margin: 0 auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 30px;
+}
+
+h1 {
+  margin-top: 0;
+}
+
+/* Each section (Add transaction, Transactions, Budgets, ...) */
+section {
+  padding: 20px 0;
+  border-bottom: 1px solid #eee;
+}
+
+section:last-child {
+  border-bottom: none;
+}
+
+h2 {
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+/* Forms: inputs and buttons sit in a row */
+form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+input, select {
+  font-size: 14px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  font-size: 14px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 4px;
+  background: #2c5cc5;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #1e4494;
+}
+
+button.danger {
+  background: #c53030;
+}
+
+button.danger:hover {
+  background: #9b2424;
+}
+
+button.small {
+  padding: 4px 8px;
+  font-size: 12px;
+  background: #888;
+}
+
+button.small:hover {
+  background: #666;
+}
+
+/* Transactions table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px 4px;
+  border-bottom: 1px solid #eee;
+}
+
+th {
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #777;
+}
+
+.empty-note {
+  color: #888;
+  font-style: italic;
+}
+
+.total-row td {
+  font-weight: bold;
+  border-top: 2px solid #333;
+}
+
+/* Budgets */
+.budget-item {
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.budget-item:last-child {
+  border-bottom: none;
+}
+
+.budget-head {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.budget-bar-track {
+  height: 8px;
+  background: #eee;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.budget-bar-fill {
+  height: 100%;
+  background: #2c5cc5;
+}
+
+.budget-bar-fill.over {
+  background: #c53030;
+}
+
+/* Status messages (success / error text under forms) */
+.status {
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+.status.ok {
+  color: #2f7a3d;
+}
+
+.status.error {
+  color: #c53030;
+}

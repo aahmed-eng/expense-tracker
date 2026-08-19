@@ -143,7 +143,8 @@ def summary(month, db_path=DB_PATH):
             else "No transactions have been recorded this month.")
 
 # Read and write budgets
-# If no category is provided, all budgets will be returned
+# If no category is provided, all budgets will be returned, or None if no budgets have been set
+# If a cateogry is provided but not an amount, the budget for that category will be returned
 # If an amount is provided, the budget for the given category will be set to that amount
 def budgets(category, amount, db_path=DB_PATH):
     with get_connection(db_path) as conn:
@@ -185,7 +186,7 @@ def remove_budget(category, db_path=DB_PATH):
             return "All budgets have been deleted from the database."
 
 # Export the 'transactions' and 'budgets' tables as 2 separate csv files
-def export_csv(output_dir=".", db_path=DB_PATH):
+def export_csv(output_dir="exports", db_path=DB_PATH):
     with get_connection(db_path) as conn:
         c = conn.execute("SELECT * FROM transactions") # rowid is not needed
         rows = c.fetchall()
@@ -232,7 +233,7 @@ def import_csv(table, path, ndate, ncategory, namount, db_path=DB_PATH):
     else:
         raise ValueError("Invalid table name. Please enter 'transactions' or 'budgets'.")
 
-    errors = []
+    errors = [] # to store all errors and display them at the end rather than stopping in the middle
     imported = failed = 0
 
     with open(path, "r") as csv_file:
