@@ -1,12 +1,5 @@
 // ===========================================================================
 // Expense Tracker frontend
-//
-// This file talks to the FastAPI backend using fetch(). The general pattern
-// for every request is the same:
-//   1. Build a URL (API_BASE + a path like "/transactions")
-//   2. Call fetch(url, options) — options include method, headers, body
-//   3. Wait for the response and read it as JSON
-//   4. Update the page with the result
 // ===========================================================================
 
 // Change this if your API runs somewhere else.
@@ -72,7 +65,7 @@ async function loadTransactions() {
       "<td>" + formatMoney(t.amount) + "</td>" +
       '<td><button class="small">Delete</button></td>';
 
-    // Wire up the delete button for this row
+    // Connect delete button to delete functions
     const deleteButton = row.querySelector("button");
     deleteButton.addEventListener("click", function () {
       deleteTransaction(t.rowid);
@@ -81,7 +74,7 @@ async function loadTransactions() {
     tableBody.appendChild(row);
   }
 
-  // Add a total row at the bottom
+  // Total row at the bottom
   const totalRow = document.createElement("tr");
   totalRow.className = "total-row";
   totalRow.innerHTML = "<td></td><td>Total</td><td>" + formatMoney(total) + "</td><td></td>";
@@ -147,8 +140,8 @@ document.getElementById("clear-filter-btn").addEventListener("click", function (
 // ===========================================================================
 
 async function loadBudgets() {
-  // We need two things: the list of budgets, and this month's spending
-  // per category (to draw the progress bars).
+  // Get the list of budgets, and this month's spending per category (to draw
+  // the progress bars).
   const budgetsResult = await callApi("/budgets");
   const summaryResult = await callApi("/summary");
 
@@ -257,8 +250,7 @@ document.getElementById("import-form").addEventListener("submit", async function
   const table = document.getElementById("import-table").value;
   const file = document.getElementById("import-file").files[0];
 
-  // File uploads use FormData instead of JSON. The browser sets the
-  // correct headers automatically, so we don't set Content-Type ourselves.
+  // File uploads use FormData instead of JSON.
   const formData = new FormData();
   formData.append("table", table);
   formData.append("file", file);

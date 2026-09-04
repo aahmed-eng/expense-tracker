@@ -1,12 +1,6 @@
-"""
-FastAPI backend for the expense tracker.
-
-Run it with:
-    uvicorn api:app --reload
-
-Then visit http://127.0.0.1:8000/docs for an interactive API playground
-(FastAPI generates this automatically from the code below).
-"""
+# ===========================================================================
+# FastAPI backend for the expense tracker.
+# ===========================================================================
 
 import os
 import tempfile
@@ -25,11 +19,7 @@ import database
 
 app = FastAPI(title="Expense Tracker API")
 
-# CORS = Cross-Origin Resource Sharing. Browsers block JS on one "origin"
-# (e.g. a file opened directly, or http://localhost:5500) from calling an API on another origin (e.g. http://127.0.0.1:8000)
-# unless the API explicitly allows it.
-# allow_origins=["*"] means "any origin can call this API" — fine for local development,
-# but you'd lock this down to a specific domain in production.
+# Allow requests from any origin, method, and header
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -48,10 +38,7 @@ def on_startup():
 
 
 # ---------------------------------------------------------------------------
-# Pydantic models — these define what JSON the frontend must send you.
-# FastAPI validates incoming requests against these automatically and
-# returns a clear 422 error if something's missing or the wrong type,
-# before your code even runs.
+# Pydantic models to define what JSON the frontend must send.
 # ---------------------------------------------------------------------------
 
 class TransactionIn(BaseModel):
@@ -66,15 +53,6 @@ class BudgetIn(BaseModel):
 
 # ---------------------------------------------------------------------------
 # Helpers
-#
-# database.py's read functions (get_transactions, get_transactions_by_category,
-# summary, budgets) return raw floats, so we can use them directly instead of
-# re-querying the database ourselves. They are two CLI-oriented things we do
-# need to undo for a clean API response:
-#   1. They append a ("Total", ..., total) sentinel row for display purposes.
-#   2. They return a plain string (not a tuple) when there's no data.
-# _unpack() below handles both, turning the result into a plain list of dicts
-# plus a separately-computed total, or an empty list if there's no data.
 # ---------------------------------------------------------------------------
 
 def _unpack(result):
@@ -160,7 +138,7 @@ def get_summary(month: Optional[str] = None):
 
 @app.get("/budgets")
 def list_budgets():
-    result = database.budgets(None, None)  # None means "return everything"
+    result = database.budgets(None, None)  # None returns everything
     budgets = _unpack(result)
     total = round(sum(b["Amount"] for b in budgets), 2)
     return {"budgets": budgets, "total": total}
@@ -202,7 +180,7 @@ def delete_all_budgets():
 
 # ---------------------------------------------------------------------------
 # Reset - convenience endpoint for the frontend
-# (same as cli.py's "reset" action)
+# (same as cli.py's "reset")
 # ---------------------------------------------------------------------------
 
 @app.post("/reset")
@@ -251,11 +229,7 @@ async def import_data(
     category_column: Optional[str] = Form(None),
     amount_column: Optional[str] = Form(None),
 ):
-    """Multipart form upload: table + csv file + optional column-name overrides."""
-    # database.import_csv needs a real file path on disk, so we save the
-    # uploaded file to a temporary location, run the import, then clean up.
-    suffix = ".csv"
-    with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".csv") as tmp:
         tmp.write(await file.read())
         tmp_path = tmp.name
 
