@@ -13,6 +13,18 @@ A SQLite-backed expense and budget tracker with three ways to use it: a command-
 - A FastAPI backend exposing all of the above over HTTP
 - An HTML/CSS/JS frontend for managing everything in the browser
 
+## Requirements
+
+- `fastapi` and `uvicorn` (API)
+- `tabulate` (CLI)
+- `pytest` (tests)
+
+Install dependencies with:
+
+```bash
+pip install -r requirements.txt
+```
+
 ## Usage
 
 ### Using the CLI
